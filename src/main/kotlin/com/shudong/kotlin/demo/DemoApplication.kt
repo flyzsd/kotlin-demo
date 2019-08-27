@@ -1,5 +1,7 @@
 package com.shudong.kotlin.demo
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.boot.Banner.Mode.OFF
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -12,3 +14,5 @@ fun main(args: Array<String>) {
         setBannerMode(OFF)
     }
 }
+
+fun <T: Any> T.logger(): Logger = LoggerFactory.getLogger(javaClass)
