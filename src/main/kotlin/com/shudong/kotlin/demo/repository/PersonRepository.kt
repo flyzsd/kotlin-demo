@@ -8,7 +8,6 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
-import org.springframework.stereotype.Repository
 import java.time.Instant
 
 enum class Direction {
@@ -40,14 +39,12 @@ data class Person(
     val version: Long = 0
 )
 
-@Repository
 interface PersonRepository : CrudRepository<Person, String> {
     @Modifying
     @Query("UPDATE person set age = :age WHERE id = :id")
     fun updatePerson(@Param("id") id: String, @Param("age") age: Int): Int
 }
 
-@Repository
 interface OrderRepository : CrudRepository<Order, Long> {
     @Modifying
     @Query("UPDATE order_table set age = :age, version = :version + 1 WHERE id = :id AND version = :version")
