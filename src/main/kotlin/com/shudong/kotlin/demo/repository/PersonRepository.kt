@@ -14,8 +14,8 @@ enum class Direction {
     NORTH, SOUTH, WEST, EAST
 }
 
-@Table("order_table")
-data class Order(
+@Table("purchase_order")
+data class PurchaseOrder(
     @Id
     val id: Long? = null,
     val name: String,
@@ -23,7 +23,17 @@ data class Order(
     @Column("modified_on")
     val modifiedOn: Instant = Instant.now(),
     @Version
-    val version: Long = 0
+    val version: Long = 0,
+    // one to many relationship with one aggregate root
+    // @Column("purchase_order")
+    val items: Set<OrderItem> = setOf()
+)
+
+data class OrderItem(
+    @Id
+    val id: Long? = null,
+    val quantity: Int,
+    val product: String
 )
 
 @Table("person")
@@ -45,11 +55,11 @@ interface PersonRepository : CrudRepository<Person, String> {
     fun updatePerson(@Param("id") id: String, @Param("age") age: Int): Int
 }
 
-interface OrderRepository : CrudRepository<Order, Long> {
+interface OrderRepository : CrudRepository<PurchaseOrder, Long> {
     @Modifying
-    @Query("UPDATE order_table set age = :age, version = :version + 1 WHERE id = :id AND version = :version")
+    @Query("UPDATE purchase_order set age = :age, version = :version + 1 WHERE id = :id AND version = :version")
     fun updateOrder(@Param("id") id: Long, @Param("age") age: Int, @Param("version") version: Long): Int
 
-    @Query("SELECT * FROM order_table WHERE name = :name AND age = :age")
-    fun findAllByNameAndAge(@Param("name") name: String, @Param("age") age: Int): List<Order>
+    @Query("SELECT * FROM purchase_order WHERE name = :name AND age = :age")
+    fun findAllByNameAndAge(@Param("name") name: String, @Param("age") age: Int): List<PurchaseOrder>
 }

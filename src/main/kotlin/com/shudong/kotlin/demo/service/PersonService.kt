@@ -1,13 +1,9 @@
 package com.shudong.kotlin.demo.service
 
 import com.shudong.kotlin.demo.logger
-import com.shudong.kotlin.demo.repository.Order
-import com.shudong.kotlin.demo.repository.OrderRepository
-import com.shudong.kotlin.demo.repository.Person
-import com.shudong.kotlin.demo.repository.PersonRepository
+import com.shudong.kotlin.demo.repository.*
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +22,8 @@ class PersonService(
     @Transactional
     fun findAll(): List<Person> {
         println(jdbcTemplate)
-        orderRepository.save(Order(name = "hello", age = 19))
+        val items = setOf(OrderItem(product = "milk", quantity = 1), OrderItem(product = "phone", quantity = 9))
+        orderRepository.save(PurchaseOrder(name = "hello", age = 19, items = items))
         println(orderRepository.findAll().toList())
         orderRepository.findAll().forEach { orderRepository.updateOrder(it.id!!, it.age, it.version) }
         println(orderRepository.findAll().toList())
