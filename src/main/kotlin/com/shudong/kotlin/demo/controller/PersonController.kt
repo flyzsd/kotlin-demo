@@ -22,4 +22,7 @@ class PersonController(
         val contributors = githubClient.contributors("flyzsd", "spring-rest", "xyz-token", "123456789");
         println(contributors);
     }
+
+    @GetMapping("/book")
+    fun findBook(): Unit = personService.findBook()
 }
