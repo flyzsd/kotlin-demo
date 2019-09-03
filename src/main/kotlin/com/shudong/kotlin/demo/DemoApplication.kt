@@ -6,7 +6,10 @@ import org.springframework.boot.Banner.Mode.OFF
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
 
+@EnableJdbcRepositories
 @EnableFeignClients
 @SpringBootApplication
 class DemoApplication
@@ -17,4 +20,4 @@ fun main(args: Array<String>) {
     }
 }
 
-fun <T: Any> T.logger(): Logger = LoggerFactory.getLogger(javaClass)
+fun <T : Any> T.logger(): Logger = LoggerFactory.getLogger(javaClass)
