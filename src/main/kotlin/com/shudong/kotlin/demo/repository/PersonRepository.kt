@@ -43,6 +43,9 @@ data class Person(
     val name: String,
     val age: Int,
     val direction: Direction = Direction.EAST,
+    @Column("auxiliary_json")
+    val auxiliaryJson: String = "{}",
+    val auxiliaryName: String? = null,
     @Column("modified_on")
     val modifiedOn: Instant = Instant.now(),
     @Version
