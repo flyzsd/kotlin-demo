@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.util.*
 
 @Service
 class PersonService(
@@ -32,7 +33,8 @@ class PersonService(
         println(orderRepository.findAll().toList())
         val orders = orderRepository.findAllByNameAndAge("hello", 19)
         println(orders)
-        val person = personRepository.save(Person(id = "1234", name = "shudong", age = 35))
+        val id = UUID.randomUUID().toString();
+        val person = personRepository.save(Person(id = id, name = "shudong\uD83D\uDE42", age = 35))
         println(person)
         val updatedCount = personRepository.updatePerson(person.id!!, 36)
         println("updatedCount = $updatedCount")
