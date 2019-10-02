@@ -39,13 +39,13 @@ data class OrderItem(
 @Table("person")
 data class Person(
     @Id
-    val id: String? = null,
+    val id: String,
     val name: String,
     val age: Int,
     val direction: Direction = Direction.EAST,
     @Column("auxiliary_json")
     val auxiliaryJson: String = "{}",
-    val auxiliaryName: String? = null,
+    val auxiliaryName: String? = null,          //read-only column from JSON
     @Column("modified_on")
     val modifiedOn: Instant = Instant.now(),
     @Version

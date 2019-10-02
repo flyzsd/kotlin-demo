@@ -1,5 +1,8 @@
 package com.shudong.kotlin.demo.service
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.shudong.kotlin.demo.logger
 import com.shudong.kotlin.demo.repository.*
 import org.slf4j.LoggerFactory
@@ -21,6 +24,10 @@ class PersonService(
 
     companion object {
         private val logger = LoggerFactory.getLogger(PersonService::class.java)
+        private val mapper = jacksonObjectMapper().apply {
+            registerModule(JavaTimeModule())
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        }
     }
 
     @Transactional
@@ -34,8 +41,13 @@ class PersonService(
         val orders = orderRepository.findAllByNameAndAge("hello", 19)
         println(orders)
         val id = UUID.randomUUID().toString();
-        val person = personRepository.save(Person(id = id, name = "shudong\uD83D\uDE42", age = 35))
+        val person = personRepository.save(Person(id = id, name = "shudong\uD83D\uDE42", age = 35, auxiliaryJson = """{
+            |"name":"jeffrey"
+            |}""".trimMargin()))
         println(person)
+        val person2 = personRepository.findByIdOrNull(id)
+        println(person2)
+        println(person == person2)
         val updatedCount = personRepository.updatePerson(person.id!!, 36)
         println("updatedCount = $updatedCount")
         val findByIdOrNull: Person? = personRepository.findByIdOrNull(person.id!!)
@@ -55,7 +67,7 @@ class PersonService(
         println(author)
         println(book)
         val book2 = bookRepository.save(Book(name = "Kotlin In Action", isbn = "ISBN4567", price = 19.9, publishedDate = Instant.now(), authorRefs = setOf(AuthorRef(author = author2.id!!))))
-        println(book2)
+        println(mapper.writeValueAsString(book2))
         val books = bookRepository.findAll().toList()
         println(books)
         bookRepository.deleteById(book2.id!!)
