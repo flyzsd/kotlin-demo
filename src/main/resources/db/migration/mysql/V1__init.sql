@@ -5,7 +5,7 @@ CREATE TABLE person
     age               INTEGER,
     direction         VARCHAR(255) NOT NULL,
     auxiliary_json    LONGTEXT     NOT NULL CHECK (JSON_VALID(auxiliary_json)),
-    modified_on       TIMESTAMP    NOT NULL,
+    modified_on       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     version           BIGINT       NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

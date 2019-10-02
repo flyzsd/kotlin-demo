@@ -7,7 +7,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -48,17 +48,17 @@ class PersonService(
 
     @Transactional
     fun findBook(): Unit {
-        val author = authorRepository.save(Author(firstName = "John", lastName = "Miller", dateOfBirth = LocalDate.of(1980, 12, 12)))
-        val author2 = authorRepository.save(Author(firstName = "Will", lastName = "Smith", dateOfBirth = LocalDate.of(1977, 5, 25)))
+        val author = authorRepository.save(Author(firstName = "John", lastName = "Miller", dateOfBirth = Instant.now()))
+        val author2 = authorRepository.save(Author(firstName = "Will", lastName = "Smith", dateOfBirth = Instant.now()))
         val authorRefs = setOf(AuthorRef(author = author.id!!), AuthorRef(author = author2.id!!))
-        val book = bookRepository.save(Book(name = "Think In Java", isbn = "ISBN1234", price = 9.9, publishedDate = LocalDate.of(2018, 12, 12), authorRefs = authorRefs))
+        val book = bookRepository.save(Book(name = "Think In Java", isbn = "ISBN1234", price = 9.9, publishedDate = Instant.now(), authorRefs = authorRefs))
         println(author)
         println(book)
-        val book2 = bookRepository.save(Book(name = "Kotlin In Action", isbn = "ISBN4567", price = 19.9, publishedDate = LocalDate.of(2019, 5, 12), authorRefs = setOf(AuthorRef(author = author2.id!!))))
+        val book2 = bookRepository.save(Book(name = "Kotlin In Action", isbn = "ISBN4567", price = 19.9, publishedDate = Instant.now(), authorRefs = setOf(AuthorRef(author = author2.id!!))))
         println(book2)
         val books = bookRepository.findAll().toList()
         println(books)
-        bookRepository.deleteById(2)
+        bookRepository.deleteById(book2.id!!)
     }
 
 }
