@@ -1,15 +1,18 @@
 package com.shudong.kotlin.demo.service
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.shudong.kotlin.demo.logger
 import com.shudong.kotlin.demo.repository.*
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -27,6 +30,7 @@ class PersonService(
         private val mapper = jacksonObjectMapper().apply {
             registerModule(JavaTimeModule())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         }
     }
 
@@ -71,6 +75,12 @@ class PersonService(
         val books = bookRepository.findAll().toList()
         println(books)
         bookRepository.deleteById(book2.id!!)
+    }
+
+    @Cacheable(cacheNames = ["cache1"], key = "#i.hashCode()")
+    fun calculatePiDecimal(i: String): BigDecimal {
+        logger.info("calculatePiDecimal")
+        return BigDecimal.ZERO
     }
 
 }
